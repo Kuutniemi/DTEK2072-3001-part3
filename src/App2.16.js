@@ -78,6 +78,14 @@ const App = () => {
     error: false,
   });
 
+  useEffect(() => {
+    const getData = async () => {
+      const response = await getPersons();
+      setPersons(response.data);
+    };
+    getData();
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (persons.some((person) => person.name === newName)) {
@@ -86,6 +94,7 @@ const App = () => {
     createPerson({ name: newName, number: newNumber }).then((res) => {
       if (res.status === 201) {
         setNotification({ message: `Added ${newName}`, error: false });
+        setPersons(persons.concat(res.data));
         setTimeout(() => {
           setNotification({ message: null, error: false });
         }, 5000);
@@ -98,8 +107,9 @@ const App = () => {
   const handleDelete = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
       deletePerson(id).then((res) => {
-        if (res.status === 200) {
+        if (res.status === 204) {
           setNotification({ message: `Deleted ${name}`, error: true });
+          setPersons(persons.filter((person) => person.id !== id));
           setTimeout(() => {
             setNotification({ message: null, error: false });
           }, 5000);
@@ -107,14 +117,6 @@ const App = () => {
       });
     }
   };
-
-  useEffect(() => {
-    const getData = async () => {
-      const response = await getPersons();
-      setPersons(response.data);
-    };
-    getData();
-  }, [handleSubmit]);
 
   return (
     <div>

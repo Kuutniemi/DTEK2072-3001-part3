@@ -1,8 +1,12 @@
 const express = require("express");
 const app = express();
 var morgan = require("morgan");
+const cors = require("cors");
 
 app.use(morgan("tiny"));
+app.use(express.json());
+app.use(cors());
+app.use(express.static("build"));
 
 let persons = [
   {
@@ -28,7 +32,7 @@ let persons = [
 ];
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  res.status(200).json(persons);
 });
 
 app.get("/api/persons/:id", (req, res) => {
@@ -65,7 +69,7 @@ app.post("/api/persons", (req, res) => {
     id: Math.floor(Math.random() * 1000000),
   };
   persons = persons.concat(person);
-  res.json(person);
+  res.status(201).json(person);
 });
 
 app.get("/info", (req, res) => {
