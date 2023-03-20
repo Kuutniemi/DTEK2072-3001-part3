@@ -32,10 +32,11 @@ const PersonForm = ({
 };
 
 const Person = ({ person, del }) => {
+  console.log(person);
   return (
     <p>
       {person.name} {person.number}{" "}
-      <button onClick={() => del(person.id, person.name)}>delete</button>
+      <button onClick={() => del(person._id, person.name)}>delete</button>
     </p>
   );
 };
@@ -105,6 +106,7 @@ const App = () => {
   };
 
   const handleDelete = (id, name) => {
+    console.log("DELETE: ", id, typeof id);
     if (window.confirm(`Delete ${name}?`)) {
       deletePerson(id).then((res) => {
         if (res.status === 204) {

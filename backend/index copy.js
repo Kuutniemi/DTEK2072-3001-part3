@@ -8,8 +8,6 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("build"));
 
-const Yhteystiedot = require("./helpers/yhteystiedotdb");
-
 let persons = [
   {
     name: "Arto Hellas",
@@ -33,13 +31,12 @@ let persons = [
   },
 ];
 
-app.get("/api/persons", async (req, res) => {
-  const persons = await Yhteystiedot.find({});
+app.get("/api/persons", (req, res) => {
   res.status(200).json(persons);
 });
 
-app.get("/api/persons/:id", async (req, res) => {
-  const id = req.params.id;
+app.get("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
   const person = persons.find((person) => person.id === id);
   if (person) {
     res.json(person);
@@ -48,15 +45,13 @@ app.get("/api/persons/:id", async (req, res) => {
   }
 });
 
-app.delete("/api/persons/:id", async (req, res) => {
-  console.log("ID: ", req.params.id, " deleted");
-  const id = req.params.id;
-  // persons = persons.filter((person) => person._id !== id);
-  del = await Yhteystiedot.findByIdAndRemove(id);
+app.delete("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  persons = persons.filter((person) => person.id !== id);
   res.status(204).end();
 });
 
-app.post("/api/persons", async (req, res) => {
+app.post("/api/persons", (req, res) => {
   const body = req.body;
   if (!body.name || !body.number) {
     return res.status(400).json({
@@ -68,15 +63,13 @@ app.post("/api/persons", async (req, res) => {
       error: "name must be unique",
     });
   }
-  const newPerson = new Yhteystiedot({
+  const person = {
     name: body.name,
     number: body.number,
-  });
-  newPerson.save().then((yht) => {
-    persons = persons.concat(newPerson);
-    console.log(yht);
-  });
-  res.status(201).json(newPerson);
+    id: Math.floor(Math.random() * 1000000),
+  };
+  persons = persons.concat(person);
+  res.status(201).json(person);
 });
 
 app.get("/info", (req, res) => {
