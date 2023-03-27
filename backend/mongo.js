@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-// Replace with the URL of your own database. Do not store the password on GitLab!
+// Otin vapauden laittaa mongo url suoraan enviin, jottei monimutkaista salasanaa tarvitse consoleen kirjoittaa
 const url = process.env.MONGO;
 
 mongoose.connect(url);

@@ -32,7 +32,7 @@ const PersonForm = ({
 };
 
 const Person = ({ person, del }) => {
-  console.log(person);
+  // console.log(person);
   return (
     <p>
       {person.name} {person.number}{" "}
@@ -106,16 +106,17 @@ const App = () => {
   };
 
   const handleDelete = (id, name) => {
-    console.log("DELETE: ", id, typeof id);
+    // console.log("DELETE: ", id, typeof id);
     if (window.confirm(`Delete ${name}?`)) {
       deletePerson(id).then((res) => {
         if (res.status === 204) {
           setNotification({ message: `Deleted ${name}`, error: true });
-          setPersons(persons.filter((person) => person.id !== id));
+          setPersons(persons.filter((person) => person._id !== id));
           setTimeout(() => {
             setNotification({ message: null, error: false });
           }, 5000);
         }
+        console.log(persons);
       });
     }
   };
